@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# This hook is called with the following parameters:
+#
+# $1 -- Name of the remote to which the push is being done
+# $2 -- URL to which the push is being done
+#
+# If pushing without using a named remote those arguments will be equal.
+#
+# Information about the commits which are being pushed is supplied as lines to
+# the standard input in the form:
+#
+#   <local ref> <local oid> <remote ref> <remote oid>
+#
+remote="$1"
+url="$2"
+
+zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
+
+while read local_ref local_oid remote_ref remote_oid
+do
+	if test "$local_oid" = "$zero"
+	then
+		# Handle delete
+		:
+	else
+		HERE=$(realpath $(dirname ${BASH_SOURCE[0]}))
+        hooksDir="${HERE}"
+        if [[ $(basename ${HERE}) == "hooks" ]]; then
+            hooksDir="${HERE}/../../git-hooks"
+        fi
+        echo "Generating skeets for new posts..."
+        pushd ${hooksDir} >/dev/null
+            trap "popd >/dev/null" EXIT
+            hugo list published -s .. |  go run . -u joshghiloni.me
+
+            git status --porcelain
+            stagedChangeCount=$(git status --porcelain | grep -v '^??' | grep -v '^A ' | wc -l || true)
+            if [[ $stagedChangeCount > 0 ]]; then
+                git commit --amend --no-edit --gpg-sign --signoff --no-verify --all
+            fi
+	fi
+done
+
+exit 0
