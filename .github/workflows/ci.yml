@@ -5,6 +5,7 @@ on:
 
 jobs:
   build-publish:
+    if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]') }}
     runs-on: site-runners
     permissions:
       contents: read

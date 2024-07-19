@@ -26,17 +26,13 @@ do
 		# Handle delete
 		:
 	else
-		HERE=$(realpath $(dirname ${BASH_SOURCE[0]}))
-        hooksDir="${HERE}"
-        if [[ $(basename ${HERE}) == "hooks" ]]; then
-            hooksDir="${HERE}/../../git-hooks"
-        fi
+		HERE=$(dirname $(realpath ${BASH_SOURCE[0]}))
+
         echo "Generating skeets for new posts..."
-        pushd ${hooksDir} >/dev/null
+        pushd ${HERE} >/dev/null
             trap "popd >/dev/null" EXIT
             hugo list published -s .. |  go run . -u joshghiloni.me
 
-            git status --porcelain
             stagedChangeCount=$(git status --porcelain | grep -v '^??' | grep -v '^A ' | wc -l || true)
             if [[ $stagedChangeCount > 0 ]]; then
                 git commit --amend --no-edit --gpg-sign --signoff --no-verify --all
