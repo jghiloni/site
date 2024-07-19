@@ -20,6 +20,8 @@ jobs:
           sudo apt -y update && sudo apt -y install curl git
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Call Dagger Function to build and publish to private registry
         uses: dagger/dagger-for-github@v5
         with:
@@ -63,7 +65,7 @@ jobs:
       - name: Helm Deploy
         uses: WyriHaximus/github-action-helm3@v4.0.1
         with:
-          exec: helm upgrade --install website charts/site --namespace website --create-namespace
+          exec: helm upgrade --install website chart/site --namespace website --create-namespace
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
 
