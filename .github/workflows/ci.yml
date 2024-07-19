@@ -8,10 +8,14 @@ jobs:
     runs-on: site-runners
     steps:
         - shell: bash
+          env:
+            EVENT: ${{ toJSON(github.event.push) }}
+            MSG: ${{ join(github.event.push.commits.*.message, '\n')}}
+            CONTAINS: ${{ contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]')}}
           run: |
-            echo ${{ toJSON(github.event.push) }}
-            echo ${{ join(github.event.push.commits.*.message, '\n')}}
-            echo ${{ contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]')}}
+            echo "::notice title=Event JSON::$EVENT"
+            echo "::notice title=Combined commit messages::$MSG"
+            echo "::notice title=Contains substring?::$CONTAINS"
             exit 1
   build-publish:
     needs: [debug]
