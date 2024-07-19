@@ -1,4 +1,4 @@
-name: dagger
+name: build-container
 on:
   push:
     branches: [main]
@@ -18,10 +18,8 @@ jobs:
           # update apt repo and install curl and an updated git for the checkout action
           # as dagger needs it
           sudo apt -y update && sudo apt -y install curl git
-
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Call Dagger Function to build and publish to private registry
         uses: dagger/dagger-for-github@v5
         with:
@@ -41,3 +39,22 @@ jobs:
           # a repository secret named REGISTRY_PASSWORD
           # set via the GitHub UI/CL
           DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+  deploy:
+    if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-deploy]') }}
+    runs-on: site-runner
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Helm Lint
+        uses: WyriHaximus/github-action-helm3@v4.0.1
+        with:
+          exec: helm lint charts/site
+      - name: Helm Deploy
+        uses: WyriHaximus/github-action-helm3@v4.0.1
+        with:
+          exec: helm upgrade --install website charts/site --namespace website --create-namespace
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+
+

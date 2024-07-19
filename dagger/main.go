@@ -18,7 +18,6 @@ import (
 	"context"
 	"dagger/site/internal/dagger"
 	"fmt"
-	"time"
 )
 
 type Site struct{}
@@ -47,13 +46,9 @@ func (s *Site) BuildAndPublish(ctx context.Context,
 	source *dagger.Directory,
 	registry string,
 	username string,
-	// +optional
-	ref string,
 	password *dagger.Secret) (string, error) {
-	if ref == "" {
-		ref = "localdev"
-	}
+
 	return s.Build(source).
 		WithRegistryAuth(registry, username, password).
-		Publish(ctx, fmt.Sprintf("%s/images/website:%s-%s", registry, ref[0:8], time.Now().UTC().Format("20060102150405")))
+		Publish(ctx, fmt.Sprintf("%s/images/website:latest", registry))
 }
