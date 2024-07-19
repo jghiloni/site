@@ -4,7 +4,17 @@ on:
     branches: [main]
 
 jobs:
+  debug:
+    runs-on: site-runners
+    steps:
+        - shell: bash
+          run: |
+            echo ${{ toJSON(github.event.push) }}
+            echo ${{ join(github.event.push.commits.*.message, '\n')}}
+            echo ${{ contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]')}}
+            exit 1
   build-publish:
+    needs: [debug]
     if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]') }}
     runs-on: site-runners
     permissions:
