@@ -283,15 +283,15 @@ func updatePost(post hugoListPost, skeetURI string) error {
 	}
 
 	var foundSkeet any
-	if foundSkeet, err = pointerstructure.Get(frontMatter, "/params/skeet"); !errors.Is(err, pointerstructure.ErrNotFound) {
-		return err
-	}
+	foundSkeet, _ = pointerstructure.Get(frontMatter, "/params/skeet")
 
 	if foundSkeet != nil {
 		return errors.New("skeet already set")
 	}
 
-	frontMatter, err = pointerstructure.Set(frontMatter, "/params/skeet", skeetURI)
+	frontMatter, err = pointerstructure.Set(frontMatter, "/params", map[string]string{
+		"skeet": skeetURI,
+	})
 	if err != nil {
 		return err
 	}
