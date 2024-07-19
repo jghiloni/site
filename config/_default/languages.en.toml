@@ -1,0 +1,26 @@
+languageCode = "en"
+languageName = "English"
+weight = 1
+title = "Josh Ghiloni"
+
+[params]
+  displayName = "EN"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2 January 2006"
+  description = "Josh Ghiloni, Professional Amateur"
+  copyright = "&copy; 2024 Josh Ghiloni"
+
+[author]
+  name = "Josh Ghiloni"
+  image = "img/me.png"
+  headline = "I [redacted] and then I [redacted]"
+  bio = "I wrtie about tech that I work on, food I cook, and my misadventures in woodworking. Hopefully."
+  links = [
+    { email = "mailto:joshghiloni%2bme@gmail.com" },
+    { bluesky = "https://bsky.app/profile/joshghiloni.me" },
+    { github = "https://github.com/jghiloni" },
+    { keybase = "https://keybase.io/joshghiloni" },
+    { linkedin = "https://linkedin.com/in/joshghiloni" },
+    { stack-overflow = "https://stackoverflow.com/users/4462517/josh-ghiloni" },
+  ]

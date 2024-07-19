@@ -1,0 +1,2 @@
+path,slug,title,date,expiryDate,publishDate,draft,permalink,kind,section
+content/posts/hello-world/index.md,,Hello World,2024-07-16T09:26:59-04:00,0001-01-01T00:00:00Z,2024-07-16T09:26:59-04:00,false,https://joshghiloni.me/posts/hello-world/,page,posts

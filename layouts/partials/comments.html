@@ -1,0 +1,7 @@
+{{ if isset .Params "skeet" }}
+{{ $skeetURI := print .Params.skeet }}
+{{ $skeetURL := replace (replace $skeetURI "at://" "https://bsky.app/profile/") "app.bsky.feed.post" "post" }}
+<blue-comments uri="{{ $skeetURI | safeURL }}">
+    <p>If you want to join the conversation, post a reply to <a href="{{ $skeetURL }}" style="color: rgba(var(--color-primary-400), 1);">this post</a> in Bluesky</p>
+</blue-comments>
+{{ end }}
