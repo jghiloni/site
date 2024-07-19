@@ -61,7 +61,7 @@ jobs:
       - name: Helm Lint
         uses: WyriHaximus/github-action-helm3@v4.0.1
         with:
-          exec: helm lint charts/site
+          exec: helm lint chart/site
       - name: Helm Deploy
         uses: WyriHaximus/github-action-helm3@v4.0.1
         with:
