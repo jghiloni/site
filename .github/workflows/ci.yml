@@ -10,16 +10,15 @@ jobs:
         - shell: bash
           env:
             EVENT: ${{ toJSON(github) }}
-            MSG: ${{ join(github.event.push.commits.*.message, '\n')}}
-            CONTAINS: ${{ contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]')}}
+            MSG: ${{ join(github.event.commits.*.message, '\n')}}
+            CONTAINS: ${{ contains(join(github.event.commits.*.message, '\n'), '[skip-build]')}}
           run: |
             echo "::notice title=Event JSON::$EVENT"
             echo "::notice title=Combined commit messages::$MSG"
             echo "::notice title=Contains substring?::$CONTAINS"
-            exit 1
   build-publish:
     needs: [debug]
-    if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]') }}
+    if: ${{ !contains(join(github.event.commits.*.message, '\n'), '[skip-build]') }}
     runs-on: site-runners
     permissions:
       contents: read
@@ -57,7 +56,7 @@ jobs:
           # set via the GitHub UI/CL
           DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
   deploy:
-    if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-deploy]') }}
+    if: ${{ !contains(join(github.event.commits.*.message, '\n'), '[skip-deploy]') }}
     needs: [build-publish]
     runs-on: site-runners
     permissions:
