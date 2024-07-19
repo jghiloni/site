@@ -42,7 +42,7 @@ jobs:
   deploy:
     if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-deploy]') }}
     needs: [build-publish]
-    runs-on: site-runner
+    runs-on: site-runners
     permissions:
       contents: read
     steps:
