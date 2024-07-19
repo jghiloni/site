@@ -46,6 +46,15 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Install Tools
+        shell: bash
+        run: |
+          # make manpage dir manually
+          mkdir -p /usr/share/man/man1
+
+          # update apt repo and install curl and an updated git for the checkout action
+          # as dagger needs it
+          sudo apt -y update && sudo apt -y install curl git
       - uses: actions/checkout@v4
       - name: Helm Lint
         uses: WyriHaximus/github-action-helm3@v4.0.1
