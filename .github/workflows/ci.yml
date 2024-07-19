@@ -41,6 +41,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
   deploy:
     if: ${{ !contains(join(github.event.push.commits.*.message, '\n'), '[skip-deploy]') }}
+    needs: [build-publish]
     runs-on: site-runner
     permissions:
       contents: read
