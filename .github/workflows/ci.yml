@@ -9,7 +9,7 @@ jobs:
     steps:
         - shell: bash
           env:
-            EVENT: ${{ toJSON(github.event.push) }}
+            EVENT: ${{ toJSON(github) }}
             MSG: ${{ join(github.event.push.commits.*.message, '\n')}}
             CONTAINS: ${{ contains(join(github.event.push.commits.*.message, '\n'), '[skip-build]')}}
           run: |
