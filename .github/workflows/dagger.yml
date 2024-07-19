@@ -1,0 +1,43 @@
+name: dagger
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-publish:
+    runs-on: site-runners
+    permissions:
+      contents: read
+    steps:
+      - name: Install Tools
+        shell: bash
+        run: |
+          # make manpage dir manually
+          mkdir -p /usr/share/man/man1
+
+          # update apt repo and install curl and an updated git for the checkout action
+          # as dagger needs it
+          sudo apt -y update && sudo apt -y install curl git
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Call Dagger Function to build and publish to private registry
+        uses: dagger/dagger-for-github@v5
+        with:
+          version: "latest"
+          verb: call
+          # modify to use different function(s) as needed
+          module: .
+          args: build-and-publish --registry=$DOCKER_REGISTRY --username=$DOCKER_USERNAME --password=env:DOCKER_PASSWORD --source .
+          # assumes the Dagger Cloud token is in
+          # a repository secret named DAGGER_CLOUD_TOKEN
+          # set via the GitHub UI/CLI
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+        env:
+          DOCKER_REGISTRY: registry.lab.verysmart.house
+          DOCKER_USERNAME: 'robot$images+dagger'
+          # assumes the container registry password is in
+          # a repository secret named REGISTRY_PASSWORD
+          # set via the GitHub UI/CL
+          DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
