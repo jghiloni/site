@@ -25,10 +25,13 @@ type Site struct{}
 const hugoVersion = "0.128.2"
 
 func (s *Site) BuildEnv(source *dagger.Directory) *dagger.Container {
+	goCache := dag.CacheVolume("go")
 	return dag.Container().
 		From(fmt.Sprintf("hugomods/hugo:exts-%s", hugoVersion)).
 		WithDirectory("/src", source).
-		WithWorkdir("/src")
+		WithMountedCache("/root/go/pkg", goCache).
+		WithWorkdir("/src").
+		WithExec([]string{"go", "mod", "download"})
 }
 
 func (s *Site) Build(source *dagger.Directory) *dagger.Container {
