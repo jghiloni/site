@@ -7,7 +7,7 @@ tags = ["tech", "ci/cd", "k8s"]
 title = "Daggerize Everything"
 
 [params]
-  skeet = "at://did:plc:v757ur25azanhxnmg537f6pv/app.bsky.feed.post/3kxnu4skvw72j"
+  skeet = "at://did:plc:v757ur25azanhxnmg537f6pv/app.bsky.feed.post/3kxsvhcl7jp2k"
 
 +++
 

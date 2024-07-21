@@ -40,11 +40,12 @@ type hugoListPost struct {
 }
 
 type cliArgs struct {
-	PdsUrl      string `short:"p" default:"https://bsky.social" help:"the PDS URL for the bluesky account"`
-	Username    string `short:"u" required:"true" help:"the bluesky account username"`
-	AppPassword string `short:"w" required:"true" env:"APP_PASSWORD" help:"an app password for the bluesky account"`
-	HugoListCSV string `short:"f" optional:"true" hidden:"true"`
-	DryRun      bool   `default:"false" hidden:"true"`
+	PdsUrl       string `short:"p" default:"https://bsky.social" help:"the PDS URL for the bluesky account"`
+	Username     string `short:"u" required:"true" help:"the bluesky account username"`
+	AppPassword  string `short:"w" required:"true" env:"APP_PASSWORD" help:"an app password for the bluesky account"`
+	HugoListCSV  string `short:"f" optional:"true" hidden:"true"`
+	DryRun       bool   `default:"false" hidden:"true"`
+	SimulatePush bool   `default:"false" hidden:"true"`
 }
 
 const postPrefix = "A new post has been published to joshghiloni.me! Read "
@@ -151,8 +152,8 @@ func skeetPosts(posts []hugoListPost, args cliArgs) error {
 			return false
 		}
 
-		_, err = pointerstructure.Get(fm, "/params/skeet")
-		return err == nil
+		params, _ := pointerstructure.Get(fm, "/params/skeet")
+		return params != nil
 	})
 
 	xrpcClient := &xrpc.Client{
@@ -219,7 +220,9 @@ func skeetPosts(posts []hugoListPost, args cliArgs) error {
 
 		if args.DryRun {
 			json.NewEncoder(os.Stdout).Encode(skeet)
-			continue
+			if !args.SimulatePush {
+				continue
+			}
 		}
 
 		if err = updatePost(post, output.Uri); err != nil {
