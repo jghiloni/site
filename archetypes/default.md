@@ -4,4 +4,6 @@ date = {{ .Date }}
 draft = true
 categories = []
 tags = []
+description = ''
+showComments = true
 +++

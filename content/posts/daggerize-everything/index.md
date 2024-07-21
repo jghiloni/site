@@ -5,6 +5,7 @@ description = "Running Dagger in Github Actions, on self-hosted runners, with a 
 draft = false
 tags = ["tech", "ci/cd", "k8s"]
 title = "Daggerize Everything"
+showComments = true
 
 [params]
   skeet = "at://did:plc:v757ur25azanhxnmg537f6pv/app.bsky.feed.post/3kxsvhcl7jp2k"
